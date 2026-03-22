@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CCN Carnival - Digital Food Festival</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Ethers v6 UMD -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+  <style>
+    :root {
+  --carnival-red: #e74c3c;
+  --carnival-yellow: #f39c12;
+  --carnival-blue: #3498db;
+  --carnival-green: #27ae60;
+  --carnival-orange: #e67e22;
+  --carnival-purple: #9b59b6;
+  --text-dark: #2c3e50;
+  --text-light: #7f8c8d;
+  --bg-light: #f8f9fa;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background-color: #fff;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--carnival-red) 0%, var(--carnival-orange) 100%);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: var(--shadow);
+}
+
+.logo {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.network-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.connect-btn {
+  background: white;
+  color: var(--carnival-red);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.connect-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  color: var(--carnival-red);
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+              url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><rect width="1200" height="400" fill="%23f39c12"/><circle cx="200" cy="100" r="30" fill="%23e74c3c"/><circle cx="400" cy="150" r="25" fill="%233498db"/><circle cx="600" cy="80" r="35" fill="%2327ae60"/><circle cx="800" cy="120" r="20" fill="%23e67e22"/><circle cx="1000" cy="90" r="40" fill="%239b59b6"/></svg>');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.hero h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.section-title i {
+  color: var(--carnival-red);
+  font-size: 1.75rem;
+}
+
+/* Alert/Toast */
+.alert {
+  border: none;
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+/* General Card Styles */
+.card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--bg-light) 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+  padding: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+/* Organizer Panel */
+.organizer-panel {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+  border: 2px solid var(--carnival-red);
+}
+
+.organizer-panel .card-header {
+  background: linear-gradient(135deg, var(--carnival-red) 0%, var(--carnival-orange) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#stallList .card {
+  background: white;
+  border: none;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  min-height: 500px;
+}
+
+#stallList .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, 
+    var(--carnival-red) 0%, 
+    var(--carnival-orange) 25%, 
+    var(--carnival-yellow) 50%, 
+    var(--carnival-green) 75%, 
+    var(--carnival-blue) 100%);
+  z-index: 1;
+}
+
+#stallList .card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+  border-color: var(--carnival-blue);
+}
+
+#stallList .card-body {
+  padding: 2rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Stall Header */
+.stall-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.stall-title h5 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--carnival-red), var(--carnival-orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.stall-id {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+}
+
+/* Status Badge */
+.badge {
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.badge.text-bg-success {
+  background: linear-gradient(135deg, var(--carnival-green) 0%, #2ecc71 100%) !important;
+  color: white !important;
+  animation: pulse-green 2s infinite;
+}
+
+.badge.text-bg-secondary {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%) !important;
+  color: white !important;
+}
+
+@keyframes pulse-green {
+  0%, 100% { 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 rgba(39, 174, 96, 0.4); 
+  }
+  50% { 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 20px rgba(39, 174, 96, 0.6); 
+  }
+}
+
+/* Stall Info Section */
+.stall-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stall-info > div {
+  margin-bottom: 1rem;
+}
+
+.stall-info > div:last-child {
+  margin-bottom: 0;
+}
+
+.stall-info strong {
+  color: var(--text-dark);
+  font-weight: 600;
+  display: inline-block;
+  min-width: 100px;
+}
+
+.mono {
+  font-family: 'Courier New', monospace;
+  color: var(--carnival-blue);
+  font-weight: 600;
+}
+
+/* Price Display */
+.price-highlight {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, var(--carnival-yellow), #f1c40f);
+  color: #856404;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 12px rgba(243, 156, 18, 0.3);
+  margin-left: 0.5rem;
+}
+
+/* Time Display */
+.time-remaining {
+  background: linear-gradient(135deg, #e8f5e8, #d4edda);
+  border: 2px solid #c3e6cb;
+  padding: 1rem;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.time-remaining.closed {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-color: #dee2e6;
+  color: var(--text-light);
+}
+
+.time-remaining:not(.closed) {
+  color: var(--carnival-green);
+}
+
+/* Action Buttons Container */
+.stall-actions {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 2px solid #f1f3f4;
+}
+
+/* Input Groups */
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group .form-control {
+  border-radius: 12px !important;
+  border: 2px solid #e9ecef;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.input-group .form-control:focus {
+  border-color: var(--carnival-blue);
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Button Styles */
+.btn {
+  border-radius: 12px !important;
+  font-weight: 600;
+  padding: 0.8rem 1.2rem;
+  transition: all 0.3s ease;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--carnival-blue);
+  color: var(--carnival-blue);
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: var(--carnival-blue);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
+}
+
+.btn-outline-success {
+  border: 2px solid var(--carnival-green);
+  color: var(--carnival-green);
+  background: transparent;
+}
+
+.btn-outline-success:hover {
+  background: var(--carnival-green);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(39, 174, 96, 0.3);
+}
+
+.btn-outline-warning {
+  border: 2px solid var(--carnival-yellow);
+  color: #856404;
+  background: transparent;
+}
+
+.btn-outline-warning:hover {
+  background: var(--carnival-yellow);
+  color: #856404;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(243, 156, 18, 0.3);
+}
+
+.btn-outline-danger {
+  border: 2px solid var(--carnival-red);
+  color: var(--carnival-red);
+  background: transparent;
+}
+
+.btn-outline-danger:hover {
+  background: var(--carnival-red);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
+}
+
+.btn-outline-secondary {
+  border: 2px solid var(--text-light);
+  color: var(--text-light);
+  background: transparent;
+}
+
+.btn-outline-secondary:hover {
+  background: var(--text-light);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-outline-info {
+  border: 2px solid #17a2b8;
+  color: #17a2b8;
+  background: transparent;
+}
+
+.btn-outline-info:hover {
+  background: #17a2b8;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(23, 162, 184, 0.3);
+}
+
+.btn-outline-dark {
+  border: 2px solid var(--text-dark);
+  color: var(--text-dark);
+  background: transparent;
+}
+
+.btn-outline-dark:hover {
+  background: var(--text-dark);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Owner Actions Section */
+.owner-section {
+  background: linear-gradient(135deg, #fff8f8, #ffebee);
+  border: 2px solid var(--carnival-red);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.owner-section::before {
+  content: '👑';
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  font-size: 1.5rem;
+  background: white;
+  padding: 0 8px;
+}
+
+.owner-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--carnival-red);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Closed Stall Styling */
+#stallList .card:has(.text-bg-secondary) {
+  opacity: 0.8;
+  filter: saturate(0.6);
+}
+
+#stallList .card:has(.text-bg-secondary)::before {
+  background: linear-gradient(90deg, #95a5a6, #7f8c8d);
+}
+
+/* Form Elements */
+.form-control, .form-select {
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  padding: 0.8rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--carnival-blue);
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(135deg, var(--text-dark) 0%, #34495e 100%);
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #stallList {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  .input-group .form-control,
+  .input-group .btn {
+    border-radius: 12px !important;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  #stallList {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  
+  #stallList .card {
+    min-height: auto;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+/* Loading Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--carnival-red);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+   
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="#" class="logo text-decoration-none">
+          🎪 CCN Carnival
+        </a>
+        <div class="wallet-info">
+          <span id="networkTag" class="network-badge">
+            <i class="fas fa-globe me-1"></i>Network: —
+          </span>
+          <button id="connectBtn" class="connect-btn">
+            <i class="fas fa-wallet me-2"></i>Connect Wallet
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Welcome To Temasek Polytechnic CCN Carnival 2025</h1>
+      <p>A decentralized food festival where you can set up stalls & make wonderful purchases!</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container my-5">
+   
+    <div id="toast" class="alert d-none" role="alert"></div>
+
+    <!-- Organizer Panel -->
+    <div id="organizerPanel" class="card organizer-panel mb-5 d-none">
+      <div class="card-header">
+        <i class="fas fa-crown"></i>
+        <span>Organizer Dashboard</span>
+      </div>
+      <div class="card-body">
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <h6 class="fw-bold mb-3">New Organizer</h6>
+            <div class="mb-3">
+              <label class="form-label">New Organizer Address</label>
+              <input id="newOrganizer" class="form-control" placeholder="0x..." />
+            </div>
+            <button class="btn btn-outline-danger w-100" onclick="transferOrganizer()">
+              <i class="fas fa-exchange-alt me-2"></i>Transfer Organizer
+            </button>
+          </div>
+          
+          <div class="col-lg-4">
+            <h6 class="fw-bold mb-3">Manage Members</h6>
+            <div class="mb-3">
+              <label class="form-label">Member Address</label>
+              <div class="input-group">
+                <input id="memberAddr" class="form-control" placeholder="0x..." />
+                <select id="memberFlag" class="form-select" style="max-width: 100px;">
+                  <option value="true">Add</option>
+                  <option value="false">Remove</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-outline-primary w-100" onclick="setMember()">
+              <i class="fas fa-users me-2"></i>Update Member
+            </button>
+          </div>
+          
+          <div class="col-lg-4">
+            <h6 class="fw-bold mb-3">Registration Settings</h6>
+            <div class="mb-3">
+              <label class="form-label">Require Membership</label>
+              <div class="input-group">
+                <select id="requireMember" class="form-select">
+                  <option value="true">Yes</option>
+                  <option value="false" selected>No</option>
+                </select>
+                <button class="btn btn-outline-secondary" onclick="toggleRequireMember()">
+                  <i class="fas fa-cog"></i>
+                </button>
+              </div>
+            </div>
+            <div class="text-muted">
+              <small>Current setting: <span id="requireState" class="fw-bold">—</span></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Stall -->
+    <div class="card mb-5">
+      <div class="card-header">
+        <i class="fas fa-store me-2"></i>Register Your Stall
+      </div>
+      <div class="card-body">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <label class="form-label">Stall Name</label>
+            <input id="stallName" class="form-control" placeholder="e.g., Apple Juicy, Pizza Corner" />
+            <small class="form-text text-muted">Name Your Stall</small>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Operating Duration</label>
+            <select id="stallDays" class="form-select">
+              <option value="1">Friday</option>
+              <option value="2">Friday & Saturday</option>
+              <option value="3">Friday, Saturday & Sunday</option>
+            </select>
+            <small class="form-text text-muted">How long will your stall operate?</small>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Pricing Model (in wei)</label>
+            <input id="stallPriceWei" type="text" class="form-control" value="0" placeholder="Price in wei (0 for donations)" />
+            <small class="form-text text-muted">Set 0 for donation-based pricing</small>
+          </div>
+        </div>
+        <div class="mt-4">
+          <button class="btn btn-success btn-lg" onclick="registerStall()">
+            <i class="fas fa-plus-circle me-2"></i>Register My Stall
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stalls Section -->
+    <div class="section-header">
+      <div class="section-title">
+        
+        <span>Festival Stalls</span>
+      </div>
+      <button class="btn btn-outline-primary" onclick="refreshAll()">
+        <i class="fas fa-sync-alt me-2"></i>Refresh
+      </button>
+    </div>
+    
+    <div id="stallList" class="row g-4">
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy;  Founded in 1991, Temasek Polytechnic (TP) Campus Care Network (CCN). Bringing communities together through food and blockchain technology.</p>
+    </div>
+  </footer>
+
+<script>
+
+const CONTRACT_ADDRESS = "0xc423031f33b2db11ec9a78956424443aed179944"
+const CONTRACT_ABI = [
+		{
+			"inputs": [],
+			"stateMutability": "nonpayable",
+			"type": "constructor"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "owner",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "stallId",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "FundsWithdrawn",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "bool",
+					"name": "isMember",
+					"type": "bool"
+				}
+			],
+			"name": "MemberUpdated",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "oldOrganizer",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "newOrganizer",
+					"type": "address"
+				}
+			],
+			"name": "OrganizerTransferred",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "payer",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "stallId",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "PaymentMade",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "stallId",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "newPrice",
+					"type": "uint256"
+				}
+			],
+			"name": "PriceUpdated",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "stallId",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "RefundIssued",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "bool",
+					"name": "enabled",
+					"type": "bool"
+				}
+			],
+			"name": "RequireMemberToRegisterSet",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "stallId",
+					"type": "uint256"
+				}
+			],
+			"name": "StallClosed",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "stallId",
+					"type": "uint256"
+				}
+			],
+			"name": "StallClosedEarly",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "id",
+					"type": "uint256"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "owner",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "pricePerItem",
+					"type": "uint256"
+				}
+			],
+			"name": "StallRegistered",
+			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "qty",
+					"type": "uint256"
+				}
+			],
+			"name": "buyFromStall",
+			"outputs": [],
+			"stateMutability": "payable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				}
+			],
+			"name": "closeEarly",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_index",
+					"type": "uint256"
+				}
+			],
+			"name": "getPaymentByIndex",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "payer",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "timestamp",
+							"type": "uint256"
+						}
+					],
+					"internalType": "struct CCNCarnival.Payment",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				}
+			],
+			"name": "getPaymentCount",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				}
+			],
+			"name": "getStallById",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "id",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address payable",
+							"name": "owner",
+							"type": "address"
+						},
+						{
+							"internalType": "string",
+							"name": "name",
+							"type": "string"
+						},
+						{
+							"internalType": "uint8",
+							"name": "operatingDays",
+							"type": "uint8"
+						},
+						{
+							"internalType": "uint256",
+							"name": "balance",
+							"type": "uint256"
+						},
+						{
+							"internalType": "bool",
+							"name": "exists",
+							"type": "bool"
+						},
+						{
+							"internalType": "uint256",
+							"name": "createdAt",
+							"type": "uint256"
+						},
+						{
+							"internalType": "enum CCNCarnival.StallStatus",
+							"name": "status",
+							"type": "uint8"
+						},
+						{
+							"internalType": "uint256",
+							"name": "pricePerItem",
+							"type": "uint256"
+						}
+					],
+					"internalType": "struct CCNCarnival.Stall",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				}
+			],
+			"name": "isStallClosed",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"name": "isTPMember",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address payable",
+					"name": "_buyer",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_amount",
+					"type": "uint256"
+				}
+			],
+			"name": "issueRefund",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "organizer",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				}
+			],
+			"name": "payToStall",
+			"outputs": [],
+			"stateMutability": "payable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"name": "paymentsByStall",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "payer",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "timestamp",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_operatingDays",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_pricePerItem",
+					"type": "uint256"
+				}
+			],
+			"name": "registerStall",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "requireMemberToRegister",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_account",
+					"type": "address"
+				},
+				{
+					"internalType": "bool",
+					"name": "_isMember",
+					"type": "bool"
+				}
+			],
+			"name": "setMember",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bool",
+					"name": "_enabled",
+					"type": "bool"
+				}
+			],
+			"name": "setRequireMemberToRegister",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "stallCounter",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"name": "stalls",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "id",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address payable",
+					"name": "owner",
+					"type": "address"
+				},
+				{
+					"internalType": "string",
+					"name": "name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint8",
+					"name": "operatingDays",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint256",
+					"name": "balance",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bool",
+					"name": "exists",
+					"type": "bool"
+				},
+				{
+					"internalType": "uint256",
+					"name": "createdAt",
+					"type": "uint256"
+				},
+				{
+					"internalType": "enum CCNCarnival.StallStatus",
+					"name": "status",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint256",
+					"name": "pricePerItem",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"name": "totalPaidByBuyer",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"name": "totalRefundedToBuyer",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_newOrganizer",
+					"type": "address"
+				}
+			],
+			"name": "transferOrganizer",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_newPrice",
+					"type": "uint256"
+				}
+			],
+			"name": "updatePrice",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"name": "userPayments",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_stallId",
+					"type": "uint256"
+				}
+			],
+			"name": "withdrawFunds",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"stateMutability": "payable",
+			"type": "receive"
+		}
+	];
+
+let provider, signer, contract, user;
+
+const DAY_UNIT_SECONDS = 24 * 60 * 60; // contract: 1 day = 24 hours
+
+function showToast(msg, kind="info") {
+  const el = document.getElementById('toast');
+  el.className = `alert alert-${kind}`;
+  el.textContent = msg;
+  el.classList.remove('d-none');
+  setTimeout(() => el.classList.add('d-none'), 4000);
+}
+
+async function connect() {
+  try {
+    if (!window.ethereum) {
+      showToast("MetaMask not found.", "warning");
+      return;
+    }
+    provider = new ethers.BrowserProvider(window.ethereum);     
+    await provider.send("eth_requestAccounts", []);
+    signer = await provider.getSigner();
+    user = await signer.getAddress();
+
+    const net = await provider.getNetwork();
+    document.getElementById("networkTag").textContent = `Network: ${net.name} (${net.chainId})`;
+
+    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+    document.getElementById("connectBtn").textContent = `${user.slice(0,6)}…${user.slice(-4)}`;
+
+    await updateOrganizerPanel();
+    await refreshAll();
+  } catch (e) {
+    showToast(e.shortMessage || e.message, "danger");
+  }
+}
+document.getElementById("connectBtn").addEventListener("click", connect);
+
+
+function fmtEth(wei) {
+  try { return ethers.formatEther(wei); } catch { return "0"; }
+}
+function toWeiFromEthStr(ethStr) {
+  return ethers.parseEther(ethStr || "0");
+}
+function secsLeft(createdAt, operatingDays) {
+  const end = Number(createdAt) + Number(operatingDays) * DAY_UNIT_SECONDS;
+  return Math.max(0, end - Math.floor(Date.now() / 1000));
+}
+function hhmmss(totalSeconds) {
+  const s = Math.floor(totalSeconds % 60);
+  const m = Math.floor((totalSeconds / 60) % 60);
+  const h = Math.floor(totalSeconds / 3600);
+  return `${h}h ${m}m ${s}s`;
+}
+
+async function updateOrganizerPanel() {
+  try {
+    const org = await contract.organizer();
+    const requireMember = await contract.requireMemberToRegister();
+    document.getElementById("requireState").textContent = requireMember ? "true" : "false";
+    document.getElementById("organizerPanel").classList.toggle("d-none", (org.toLowerCase() !== user?.toLowerCase()));
+  } catch {}
+}
+async function transferOrganizer() {
+  try {
+    const addr = document.getElementById("newOrganizer").value.trim();
+    const tx = await contract.transferOrganizer(addr);
+    showToast("Transferring organizer…");
+    await tx.wait();
+    await updateOrganizerPanel();
+    showToast("Organizer transferred!", "success");
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+async function setMember() {
+  try {
+    const addr = document.getElementById("memberAddr").value.trim();
+    const flag = document.getElementById("memberFlag").value === "true";
+    const tx = await contract.setMember(addr, flag);
+    showToast("Updating member…");
+    await tx.wait();
+    showToast("Member updated.", "success");
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+async function toggleRequireMember() {
+  try {
+    const flag = document.getElementById("requireMember").value === "true";
+    const tx = await contract.setRequireMemberToRegister(flag);
+    showToast("Setting gate…");
+    await tx.wait();
+    document.getElementById("requireState").textContent = flag ? "true" : "false";
+    showToast("Registration gate updated.", "success");
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+
+
+async function registerStall() {
+  try {
+    const name = document.getElementById("stallName").value.trim();
+    const days = Number(document.getElementById("stallDays").value);
+    const priceWeiStr = document.getElementById("stallPriceWei").value.trim();
+    if (!name || !(days>=1 && days<=3)) return showToast("Enter name and days 1..3", "warning");
+    const priceWei = priceWeiStr ? BigInt(priceWeiStr) : 0n;
+    const tx = await contract.registerStall(name, days, priceWei);
+    showToast("Registering stall…");
+    await tx.wait();
+    showToast("Stall registered!", "success");
+    await refreshAll();
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+
+
+async function refreshAll() {
+  if (!contract) return;
+  const list = document.getElementById("stallList");
+  list.innerHTML = "";
+
+  // CHANGE: clear old timer so we don't stack intervals on repeated refreshes
+  if (window._stallTick) {
+    clearInterval(window._stallTick);
+    window._stallTick = null;
+  }
+
+  const count = Number(await contract.stallCounter());
+  for (let id = 1; id <= count; id++) {
+    try {
+      const s = await contract.stalls(id);
+      if (!s.exists) continue;
+
+      const closed = await contract.isStallClosed(id);
+      const left = secsLeft(s.createdAt, s.operatingDays);
+      const isOwner = (user && s.owner.toLowerCase() === user.toLowerCase());
+
+     
+      const statusBadge = closed
+        ? `<span id="status_${id}" class="badge text-bg-secondary">Closed</span>`
+        : `<span id="status_${id}" class="badge text-bg-success">Open</span>`;
+
+     
+      const priceText = (s.pricePerItem === 0n)
+        ? `<span class="pill bg-warning-subtle border">Donation/Variable</span>`
+        : `${fmtEth(s.pricePerItem)} ETH / item`;
+
+      
+      const ownerShort = `${s.owner.slice(0,6)}…${s.owner.slice(-4)}`;
+
+      const col = document.createElement("div");
+      col.className = "col-12 col-md-6 col-lg-6";
+
+     
+      col.innerHTML = `
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 class="card-title mb-1">#${id} ${s.name}</h5>
+              ${statusBadge}
+            </div>
+            <div class="text-muted mb-2 mono"></div>
+            <div class="mb-2"><strong>Owner:</strong> <span class="mono">${ownerShort}</span></div>
+            <div class="mb-2"><strong>Operating days:</strong> ${s.operatingDays}</div>
+            ${isOwner ? `<div class="mb-2"><strong>Balance:</strong> ${fmtEth(s.balance)} ETH</div>` : ""}
+            <div class="mb-2"><strong>Price:</strong> ${priceText}</div>
+            <div class="mb-3">
+              <strong>Time left:</strong>
+              <span
+                id="timeLeft_${id}"
+                class="time-left"
+                data-stall="${id}"
+                data-left="${closed ? 0 : left}"
+              >${closed ? "—" : hhmmss(left)}</span>
+            </div>
+            ${renderActions(id, s, closed, isOwner)}
+          </div>
+        </div>
+      `;
+      list.appendChild(col);
+    } catch {}
+  }
+
+  
+  window._stallTick = setInterval(() => {
+    const nodes = document.querySelectorAll('#stallList [data-left]');
+    let anyActive = false;
+
+    nodes.forEach((el) => {
+      let left = parseInt(el.getAttribute('data-left'), 10) || 0;
+      if (left > 0) {
+        left -= 1;
+        anyActive = true;
+        el.setAttribute('data-left', left);
+        el.textContent = left > 0 ? hhmmss(left) : "—";
+
+        if (left === 0) {
+          // flip the badge to "Closed"
+          const stallId = el.getAttribute('data-stall');
+          const badge = document.getElementById(`status_${stallId}`);
+          if (badge) {
+            badge.textContent = "Closed";
+            badge.classList.remove("text-bg-success");
+            badge.classList.add("text-bg-secondary");
+          }
+        }
+      }
+    });
+
+    if (!anyActive) {
+      clearInterval(window._stallTick);
+      window._stallTick = null;
+    }
+  }, 1000);
+}
+
+function renderActions(id, s, closed, isOwner) {
+  const donationBlock = (s.pricePerItem === 0n && !closed)
+    ? `
+      <div class="input-group mb-2">
+        <input id="donateEth_${id}" class="form-control" placeholder="ETH amount e.g. 0.001">
+        <button class="btn btn-outline-success" onclick="payToStall(${id})">Pay / Donate</button>
+      </div>
+    ` : "";
+
+  const buyBlock = (s.pricePerItem > 0n && !closed)
+    ? `
+      <div class="input-group mb-2">
+        <input id="buyQty_${id}" type="number" min="1" value="1" class="form-control" placeholder="Quantity">
+        <button class="btn btn-outline-primary" onclick="buyFromStall(${id})">Buy</button>
+      </div>
+      <div class="form-text">You will pay qty × pricePerItem (Exactly).</div>
+    ` : "";
+
+  const ownerBlock = (isOwner)
+    ? `
+      <div class="ownersection">
+      <div class="owner-title">Owner Actions</div>
+      <div class="input-group mb-2">
+        <input id="newPriceWei_${id}" class="form-control" placeholder="New price in wei (0 for donation)">
+        <button class="btn btn-outline-secondary" onclick="updatePrice(${id})">Update Price</button>
+      </div>
+      <div class="d-flex gap-2 mb-2">
+        <button class="btn btn-outline-warning" onclick="closeEarly(${id})" ${closed ? "disabled":""}>Close Early</button>
+        <button class="btn btn-outline-dark" onclick="withdraw(${id})">Withdraw (after end)</button>
+      </div>
+      <div class="input-group mb-2">
+        <input style="display: block;" id="refundAddr_${id}" class="form-control" placeholder="Buyer address 0x..." >
+        <input style="display: block;" id="refundEth_${id}" class="form-control" placeholder="Refund ETH e.g. 0.01" > 
+        <button class="btn btn-outline-danger" onclick="refund(${id})">Issue Refund</button>
+      </div>
+      <div class="d-flex">
+        
+        <button class="btn btn-sm btn-outline-info ms-auto" onclick="showPayments(${id})">View Payments</button>
+      </div>
+    </div>
+      ` : `
+      <div class="d-flex">
+        <button class="btn btn-sm btn-outline-info ms-auto" onclick="showPayments(${id})">View Payments</button>
+      </div>
+    `;
+
+  return donationBlock + buyBlock + ownerBlock;
+}
+
+async function payToStall(id) {
+  try {
+    const ethStr = document.getElementById(`donateEth_${id}`).value.trim();
+    const value = toWeiFromEthStr(ethStr);
+    const tx = await contract.payToStall(id, { value });
+    showToast("Paying…");
+    await tx.wait();
+    showToast("Payment successful!", "success");
+    await refreshAll();
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+async function buyFromStall(id) {
+  try {
+    const qty = Number(document.getElementById(`buyQty_${id}`).value);
+    if (qty <= 0) return showToast("Qty must be > 0", "warning");
+    const s = await contract.stalls(id);
+    if (s.pricePerItem === 0n) return showToast("Stall is not fixed-price.", "warning");
+    const total = s.pricePerItem * BigInt(qty);
+    const tx = await contract.buyFromStall(id, qty, { value: total });
+    showToast("Buying…");
+    await tx.wait();
+    showToast("Purchase successful!", "success");
+    await refreshAll();
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+async function updatePrice(id) {
+  try {
+    const weiStr = document.getElementById(`newPriceWei_${id}`).value.trim();
+    const newPrice = weiStr ? BigInt(weiStr) : 0n;
+    const tx = await contract.updatePrice(id, newPrice);
+    showToast("Updating price…");
+    await tx.wait();
+    showToast("Price updated.", "success");
+    await refreshAll();
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+async function closeEarly(id) {
+  try {
+    const tx = await contract.closeEarly(id);
+    showToast("Closing stall early…");
+    await tx.wait();
+    showToast("Stall closed.", "success");
+    await refreshAll();
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+async function refund(id) {
+  try {
+    const to = document.getElementById(`refundAddr_${id}`).value.trim();
+    const ethStr = document.getElementById(`refundEth_${id}`).value.trim();
+    const amount = toWeiFromEthStr(ethStr);
+    const tx = await contract.issueRefund(to, id, amount);
+    showToast("Issuing refund…");
+    await tx.wait();
+    showToast("Refund sent.", "success");
+    await refreshAll();
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+async function withdraw(id) {
+  try {
+    const tx = await contract.withdrawFunds(id);
+    showToast("Withdrawing…");
+    await tx.wait();
+    showToast("Withdraw complete.", "success");
+    await refreshAll();
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+
+
+async function showPayments(id) {
+  try {
+    const count = Number(await contract.getPaymentCount(id));
+    if (count === 0) return showToast("No payments yet for this stall.", "info");
+
+    let rows = "";
+    for (let i = 0; i < count; i++) {
+      const p = await contract.getPaymentByIndex(id, i);
+      rows += `
+        <tr>
+          <td>${i}</td>
+          <td class="mono">${p.payer.slice(0,6)}…${p.payer.slice(-4)}</td>
+          <td>${fmtEth(p.amount)} ETH</td>
+          <td>${new Date(Number(p.timestamp) * 1000).toLocaleString()}</td>
+        </tr>`;
+    }
+
+    const html = `
+      <div class="card mt-3" style="width: 1000px;">
+        <div class="card-body">
+          <h6 class="mb-2">Payments for Stall #${id} (${count})</h6>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle">
+              <thead><tr><th>#</th><th>Payer</th><th>Amount</th><th>When</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>`;
+    const list = document.getElementById("stallList");
+    const wrap = document.createElement("div");
+    wrap.className = "col-12";
+    wrap.innerHTML = html;
+    list.appendChild(wrap);
+  } catch (e) { showToast(e.shortMessage || e.message, "danger"); }
+}
+</script>
+</body>
+</html>
